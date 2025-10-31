@@ -1,9 +1,15 @@
-#include "main_headers.hpp"
-#include "headers/projectlibs.hpp"
+#include "./headers/main_headers.hpp"
+
+/* 
+Main file of the project. 
+Keeping it in main folder for easier access. 
+*/
+
+
 
 #define WIDTH 800
 #define HEIGHT 600
-#define IMG_PATH "test.png"
+#define IMG_PATH "textures/general/test.png"
 
 int main(int argc, char *argv[])
 {
