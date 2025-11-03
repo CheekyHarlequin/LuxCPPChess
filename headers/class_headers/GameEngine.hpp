@@ -3,37 +3,33 @@
 #include "../main_headers.hpp"
 
 class GameEngine {
-    private:
+private:
+  //  1920 / 16 = 120
+  // 1080 / 9 = 120
+  const int VIRTUAL_W = 1920;
+  const int VIRTUAL_H = 1080;
 
-        //  1920 / 16 = 120
-        // 1080 / 9 = 120
-        const int VIRTUAL_W = 1920;
-        const int VIRTUAL_H = 1080;
-        
-        SDL_Window* window_ = nullptr;
-        SDL_Renderer* renderer_ = nullptr;
-        bool is_running_ = false;
+  SDL_Window *window_ = nullptr;
+  SDL_Renderer *renderer_ = nullptr;
+  bool is_running_ = false;
 
+  // space for all game objects
 
-        // space for all game objects
+  std::vector<std::unique_ptr<TextureObject>> all_objects_;
 
-        std::vector<std::unique_ptr<TextureObject>> all_objects_;
+public:
+  GameEngine();
+  ~GameEngine();
 
-        public:
+  bool init();
+  void run_loop();
 
-        GameEngine();
-        ~GameEngine();
+  void cleanup();
 
-        bool init();
-        void run_loop();
+  void update_scaling();
 
-        void cleanup();
+  void add_object(std::unique_ptr<TextureObject> obj);
 
-        void update_scaling();
-        
-        void add_object(std::unique_ptr<TextureObject> obj);
-
-        void quit();
-        SDL_Renderer* get_renderer() const { return renderer_;}
-
+  void quit();
+  SDL_Renderer *get_renderer() const { return renderer_; }
 };
