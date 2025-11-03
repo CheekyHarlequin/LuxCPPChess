@@ -4,6 +4,9 @@
 #include <SDL2/SDL_image.h>
 #include <thread>
 class TextureObject {
+private:
+  int object_id_ = -1;
+
 protected:
   SDL_Texture *texture_;
   SDL_Rect rect_;
@@ -19,6 +22,9 @@ public:
 
   // render function
   virtual void render();
+
+  int get_object_id() const { return object_id_; }
+  void set_object_id(int id) { object_id_ = id; }
 
   // abstract event handler
   virtual void handle_event(SDL_Event &event) = 0;

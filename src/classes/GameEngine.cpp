@@ -1,20 +1,10 @@
 // all necessary includes
-#include <chrono>
-#include <iostream>
-#include <thread>
-
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_timer.h>
-#include <SDL2/SDL_ttf.h>
-#include <cmath>
-#include <memory>
-#include <vector>
 
 #include "../../headers/class_headers/GameEngine.hpp"
-#include "../../headers/class_headers/TextureObject.hpp"
-#include "../../headers/class_headers/staticTexture.hpp"
+
+using namespace std;
+using namespace Game_Constants;
+using namespace Objects;
 // Constructor
 GameEngine::GameEngine() {}
 
@@ -28,7 +18,7 @@ bool GameEngine::init() {
     return false;
   }
   window_ = SDL_CreateWindow("C(PP)hess", SDL_WINDOWPOS_CENTERED,
-                             SDL_WINDOWPOS_CENTERED, VIRTUAL_W, VIRTUAL_H,
+                             SDL_WINDOWPOS_CENTERED, vWidth, vHeight,
                              SDL_WINDOW_RESIZABLE);
 
   if (!window_) {
@@ -49,18 +39,45 @@ bool GameEngine::init() {
   return true;
 }
 
+void GameEngine::load_scene() {
+
+  // Bestimme die Größe für das quadratische Board (hier 1080)
+  const int SQUARE_SIZE = min(vWidth, vHeight);
+
+  // OPTIONAL: Zentriere das Board auf der X-Achse
+  const int CENTER_X = (vWidth - SQUARE_SIZE) / 2;
+  const int CENTER_Y = (vHeight - SQUARE_SIZE) / 2;
+
+  const int Board_X_Pos = CENTER_X;
+  const int Board_Y_Pos = CENTER_Y;
+  auto background =
+      std::make_unique<StaticTexture>(renderer_,
+                                      BACKGROUND_TEXTURE, // Texture Path
+                                      CENTER_X,           // X Pos
+                                      CENTER_Y,           // Y Pos
+                                      SQUARE_SIZE,        // Width: square
+                                      SQUARE_SIZE         // height: square
+      );
+
+  this->add_object(std::move(background));
+}
+
 void GameEngine::update_scaling() {
-  // get window Size
   int actual_w, actual_h;
   SDL_GetWindowSize(window_, &actual_w, &actual_h);
 
-  float scale_x = (float)actual_w / VIRTUAL_W;
-  float scale_y = (float)actual_h / VIRTUAL_H;
+  
+
+  float scale_x = (float)actual_w / vWidth;
+  float scale_y = (float)actual_h / vHeight;
+
 
   float final_scale = std::min(scale_x, scale_y);
 
-  // scale factor
   SDL_RenderSetScale(renderer_, final_scale, final_scale);
+
+  int board_size = std::min(vWidth, vHeight);
+
 }
 
 // main loop, event handling
@@ -113,4 +130,20 @@ void GameEngine::cleanup() {
     window_ = nullptr;
   }
   SDL_Quit();
+}
+
+// ID Finder for objects. ID's are definid in "ObjectID.hpp"
+TextureObject *GameEngine::get_object_by_id(int id) {
+
+  auto it = std::find_if(all_objects_.begin(), all_objects_.end(),
+
+                         [&](const std::unique_ptr<TextureObject> &obj_ptr) {
+                           return obj_ptr->get_object_id() == id;
+                         });
+
+  if (it != all_objects_.end()) {
+    return it->get();
+  }
+
+  return nullptr;
 }

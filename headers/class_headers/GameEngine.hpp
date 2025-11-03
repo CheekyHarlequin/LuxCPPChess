@@ -1,13 +1,21 @@
 #pragma once
 
-#include "../main_headers.hpp"
-
+#include "../../headers/class_headers/TextureObject.hpp"
+#include "../../headers/class_headers/staticTexture.hpp"
+#include "../../headers/constants.hpp"
+#include <SDL2/SDL.h> //
+#include <algorithm>
+#include <cmath>    // for std::min
+#include <iostream> // for cerr
+#include <memory>   // for unique_ptr
+#include <vector>   // for std::vector
 class GameEngine {
 private:
   //  1920 / 16 = 120
   // 1080 / 9 = 120
-  const int VIRTUAL_W = 1920;
-  const int VIRTUAL_H = 1080;
+
+  int vWidth = static_cast<int>(Game_Constants::Window_Dimensions::VIRTUAL_W);
+  int vHeight = static_cast<int>(Game_Constants::Window_Dimensions::VIRTUAL_H);
 
   SDL_Window *window_ = nullptr;
   SDL_Renderer *renderer_ = nullptr;
@@ -24,6 +32,8 @@ public:
   bool init();
   void run_loop();
 
+  void load_scene();
+
   void cleanup();
 
   void update_scaling();
@@ -32,4 +42,5 @@ public:
 
   void quit();
   SDL_Renderer *get_renderer() const { return renderer_; }
+  TextureObject *get_object_by_id(int id);
 };

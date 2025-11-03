@@ -1,5 +1,11 @@
 #include "headers/class_headers/GameEngine.hpp"
+#include "headers/class_headers/TextureObject.hpp"
 #include "headers/class_headers/staticTexture.hpp"
+
+#include <chrono>
+#include <iostream>
+#include <thread>
+#include <vector>
 
 int main(int argc, char *argv[]) {
   GameEngine engine;
@@ -9,10 +15,7 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  auto background = std::make_unique<StaticTexture>(
-      engine.get_renderer(), "textures/general/test.png", 0, 0, 1920, 1080);
-
-  engine.add_object(std::move(background));
+  engine.load_scene();
 
   engine.run_loop();
 
